@@ -1,2 +1,0 @@
-# GestionAutomaticaCiudad
-proyecto Entornos Desarrollo
