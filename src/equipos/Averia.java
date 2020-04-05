@@ -30,6 +30,16 @@ public class Averia implements Serializable {
 		this.descripcion = descripcion;
 		this.resuelta = resuelta;
 	}
+	public Averia(int codigo, int gravedad, double coste, String fechaAlta, String fechaRep, String descripcion,
+			boolean resuelta) {
+		this.codigo = codigo;
+		this.gravedad = gravedad;
+		this.coste = coste;
+		this.fechaAlta = fechaAlta;
+		this.fechaRep = fechaRep;
+		this.descripcion = descripcion;
+		this.resuelta = resuelta;
+	}
 	public Averia(int gravedad) {
 		this.codigo = Averia.codSig;
 		Averia.codSig++;
@@ -60,6 +70,12 @@ public class Averia implements Serializable {
 		this.resuelta = a.resuelta;
 	}
 	// ----------------------------------------- METODOS -----------------------------------------
+	public static final int getCodSig() {
+		return codSig;
+	}
+	public static final void setCodSig(int codSig) {
+		Averia.codSig = codSig;
+	}
 	public final int getGravedad() {
 		return gravedad;
 	}
@@ -92,6 +108,9 @@ public class Averia implements Serializable {
 	}
 	public final int getCodigo() {
 		return codigo;
+	}
+	public final void setCodigo(int codigo) {
+		this.codigo = codigo;
 	}
 	public final String getFechaAlta() {
 		return fechaAlta;

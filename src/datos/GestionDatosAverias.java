@@ -1,12 +1,18 @@
 package datos;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import equipos.*;
@@ -34,16 +40,7 @@ public class GestionDatosAverias implements Serializable{
 	private String rutaCompleta;
 	private Averia[] averias;
 	private Averia averia;
-	/*private LinkedList<Incidencia> incidencias;
-	private Incidencia incidencia;
-	private LinkedList<Dispositivo> dispositivos;
-	private Dispositivo dispositivo;
-	private LinkedList<Persona> personas;
-	private Persona persona;
-	private LinkedList<Nucleo> nucleos;
-	private Nucleo nucleo;
-	int tipoDato; // Se modifica según el tipo de dato que recibe el constructor como parámetro, según el tipo de dato los métodos utilizarán un algoritmo diferente.
-	*/
+	
 	/**
 	 * @see equipo.Averia
 	 * @param averia Objeto de tipo Averia que se almacenará
@@ -184,5 +181,55 @@ public class GestionDatosAverias implements Serializable{
 		}
 		
 		return guardado;
+	}
+	public static boolean exportarDatosAverias(Averia[] averias, String ruta) {
+		String rutaCompleta = ruta+File.separator+"datosAverias.csv";
+		boolean exportado=false;
+		try {
+			FileWriter archivo = new FileWriter(rutaCompleta);
+			BufferedWriter buffer = new BufferedWriter(archivo);
+		
+			if(averias == null) {
+				System.out.println("Ha ocurrido un error al recibir las averías");
+			}else {
+				for(Averia a:averias) {
+					String datos = Integer.toString(a.getCodigo())+";"+a.getCoste()+";"+a.getDescripcion()+";"+a.getFechaAlta()+";"+
+						a.getFechaRep()+";"+Integer.toString(a.getGravedad())+";"+a.isResuelta()+"\n";
+					buffer.write(datos);
+				}
+				buffer.flush();
+				buffer.close();
+				archivo.close();
+				exportado = true;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return exportado;
+	}
+	public static ArrayList<Averia> importarAverias(String ruta) {
+		ArrayList<Averia> averiasImportadas = new ArrayList<Averia>();
+		String datosAveria;
+
+		try {
+			FileReader archivo = new FileReader(ruta+File.separator+"datosAverias.csv");
+			BufferedReader buffer = new BufferedReader(archivo);
+			while((datosAveria = buffer.readLine())!= null) {
+				String[] datosFormateados = datosAveria.split(";");
+				Averia a = new Averia(Integer.valueOf(datosFormateados[0]),Integer.valueOf(datosFormateados[5]), Double.valueOf(datosFormateados[1]), datosFormateados[3], datosFormateados[4],
+						datosFormateados[2],Boolean.valueOf(datosFormateados[6]));
+				averiasImportadas.add(a);
+			}
+			buffer.close();
+			archivo.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return averiasImportadas;
 	}
 }
