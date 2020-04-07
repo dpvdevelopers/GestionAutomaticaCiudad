@@ -24,7 +24,7 @@ public class PruebaGestionCiudad implements Serializable {
 		for(Averia b:averias2) {
 			b.mostrarAveria();
 		}
-		GestionDatosAverias.exportarDatosAverias(averias2, "c:/Users/Usuario/Desktop/pruebas");
+		GestionDatosAverias.exportarAverias(averias2, "c:/Users/Usuario/Desktop/pruebas");
 		ArrayList<Averia> averias3 = GestionDatosAverias.importarAverias("c:/Users/Usuario/Desktop/pruebas");
 		for(Averia c:averias3) {
 			c.mostrarAveria();

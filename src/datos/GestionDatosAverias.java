@@ -17,7 +17,7 @@ import java.util.LinkedList;
 
 import equipos.*;
 /**
- * Clase para gestionar los datos de la aplicación, tiene métodos para guardar y recuperar los datos utilizando archivos
+ * Clase para gestionar los datos de la aplicación, contiene métodos estáticos para guardar y recuperar los datos utilizando archivos
  * serializados. Incluye también métodos para exportar e importar datos utilizando archivos CSV.
  * 
  * @version 0.5
@@ -116,7 +116,7 @@ public class GestionDatosAverias implements Serializable{
 	}
 	// ---------------------------------------------- METODOS ----------------------------------------------
 	/**
-	 * Recupera las averías de un archivo serializado 
+	 * Recupera las averías del archivo serializado que se le indica y las devuelve en un array Averia[] 
 	 * @param rutaCompleta Ruta del archivo de donde se recuperan los datos, incluyendo el nombre del archivo.
 	 * @return Devuelve un array <Averia> que contiene todas las averías almacenadas en el archivo de origen.
 	 */
@@ -139,11 +139,11 @@ public class GestionDatosAverias implements Serializable{
 		return averiasRecuperadas;
 	}
 	/**
-	 *  Recupera las averías guardadas en el archivo pasado en el parámetro, si existe, y le añade las pasadas en el 
-	 *  parámetro averías. Si el archivo de destino no existe, crea uno nuevo.
-	 * @param averias
-	 * @param rutaCompleta
-	 * @return
+	 *  Recupera las averías guardadas en el archivo serializado pasado en el parámetro, si existe, y le añade las pasadas en el 
+	 *  parámetro averías. Si el archivo de destino no existe, crea un nuevo archivo donde se guardarán los objetos serializados.
+	 * @param averias parámetro tipo LinkedList<Averia> que contiene las averías a guardar.
+	 * @param rutaCompleta String que contiene la ruta completa, incluyendo el nombre del archivo donde se guardarán los datos
+	 * @return Devuelve un valor true si la operación se realiza correctamente, en caso contrario devuelve false
 	 */
 	public static boolean guardarAverias(LinkedList<Averia> averias, String rutaCompleta) {
 		boolean guardado = false;
@@ -182,9 +182,64 @@ public class GestionDatosAverias implements Serializable{
 		
 		return guardado;
 	}
-	public static boolean exportarDatosAverias(Averia[] averias, String ruta) {
+	/**
+	 * Recupera las averías guardadas en el archivo serializado pasado en el parámetro, si existe, y le añade la pasada en el 
+	 *  parámetro avería. Si el archivo de destino no existe, crea un nuevo archivo donde se guardarán los objetos serializados.
+	 * @param averia Objeto de tipo avería que se añadirá al archivo
+	 * @param rutaCompleta Ruta completa, incluyendo el nombre de archivo donde se guardarán los datos
+	 * @return Devuelve un valor true si la operación se realiza correctamente, en caso contrario devuelve false
+	 */
+	public static boolean guardarAverias(Averia averia, String rutaCompleta) {
+		boolean guardado = false;
+		try {
+			
+			File archivo = new File(rutaCompleta);
+			if(archivo.exists()) {
+				Averia[] averiasRecuperadas = recuperarAverias(rutaCompleta);			
+				Averia[] averiasAGuardar = new Averia[1+averiasRecuperadas.length];
+				// guardamos en el array las averias recuperadas del archivo de destino
+				for(int i=0;i<averiasRecuperadas.length;i++) {
+					averiasAGuardar[i]=averiasRecuperadas[i];
+				}
+				// guardamos en el array la averia pasadas en el parametro de entrada
+				
+				averiasAGuardar[1+averiasRecuperadas.length] = averia;
+				
+				ObjectOutputStream salida = new ObjectOutputStream(new FileOutputStream(rutaCompleta));
+				salida.writeObject(averiasAGuardar);
+				salida.close();
+				guardado=true;
+			}else {
+				Averia[] averiasAGuardar = new Averia[1];
+				averiasAGuardar[1] = averia;
+				
+				ObjectOutputStream salida = new ObjectOutputStream(new FileOutputStream(rutaCompleta));
+				salida.writeObject(averiasAGuardar);
+				salida.close();
+				guardado=true;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return guardado;
+	}
+	/**
+	 * Guarda los datos de las averias pasadas en el array en un archivo csv llamado "datosAverias.csv" que se 
+	 * creará en la ruta indicada en el parámetro.
+	 * (cada fila un registro con los campos separados por el carácter ";"
+	 * @param averias Array de objetos Averia a guardar.
+	 * @param ruta Ruta del directorio donde se creará el archivo, sin incluir el nombre del archivo ni el carácter separador
+	 * @return Devuelve la ruta del archivo de guardado si se lleva a cabo la operación sin errores, en caso contrario devuelve 
+	 * un String con el texto "false".
+	 */
+	public static String exportarAverias(Averia[] averias, String ruta) {
 		String rutaCompleta = ruta+File.separator+"datosAverias.csv";
-		boolean exportado=false;
+		String exportado="false";
+		for(int i=2;new File(rutaCompleta).exists();i++) {
+			rutaCompleta=ruta+File.separator+"datosAverias"+i+".csv";
+		}
 		try {
 			FileWriter archivo = new FileWriter(rutaCompleta);
 			BufferedWriter buffer = new BufferedWriter(archivo);
@@ -200,7 +255,7 @@ public class GestionDatosAverias implements Serializable{
 				buffer.flush();
 				buffer.close();
 				archivo.close();
-				exportado = true;
+				exportado = rutaCompleta;
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -208,6 +263,12 @@ public class GestionDatosAverias implements Serializable{
 		}
 		return exportado;
 	}
+	/**
+	 * Importa las averías contenidas en un fichero csv, cada objeto Avería debe ser una fila, con los atributos separados por 
+	 * el carácter ";". Una vez importadas devuelve un ArrayList<Averia> que contiene todos los datos ya estructurados
+	 * @param ruta ruta del directorio que contiene el archivo datosAverias.csv
+	 * @return ArrayList<Averia> con los datos importados.
+	 */
 	public static ArrayList<Averia> importarAverias(String ruta) {
 		ArrayList<Averia> averiasImportadas = new ArrayList<Averia>();
 		String datosAveria;

@@ -39,6 +39,22 @@ public abstract class Dispositivo implements Serializable{
 			this.averias = new LinkedList<Averia>(); 
 		}
 	}
+	public Dispositivo(int codigo, double precio, String descripcion, String coordenadas, String fabricante,
+			String horaEnc, String horaApag, boolean operativo,	LinkedList<Averia> averias) {
+	this.codigo = codigo;
+	this.precio = precio;
+	this.descripcion = descripcion;
+	this.coordenadas = coordenadas;
+	this.fabricante = fabricante;
+	this.horaEnc = horaEnc;
+	this.horaApag = horaApag;
+	this.encendido = operativo;
+	if(averias != null) {
+		this.averias = averias;
+	}else {
+		this.averias = new LinkedList<Averia>(); 
+	}
+}
 	public Dispositivo(Dispositivo d) {
 		if(d!=null) {
 			this.codigo = Dispositivo.codSig;
