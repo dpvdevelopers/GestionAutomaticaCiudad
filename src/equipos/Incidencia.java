@@ -37,6 +37,21 @@ public class Incidencia implements Serializable{
 			this.averias = new LinkedList<Averia>();
 		}
 	}
+	public Incidencia(int codigo, double coste, String descripcion, String fechaAlta, String fechaRep, int prioridad,
+			boolean resuelta, LinkedList<Averia> averias) {
+		this.codigo = codigo;
+		this.coste = coste;
+		this.descripcion = descripcion;
+		this.fechaAlta = fechaAlta;
+		this.fechaRep = fechaRep;
+		this.prioridad = prioridad;
+		this.resuelta = resuelta;
+		if(averias!=null) {
+			this.averias = averias;
+		}else {
+			this.averias = new LinkedList<Averia>();
+		}
+	}
 	public Incidencia(String descripcion, String fechaAlta, int prioridad, LinkedList<Averia> averias) {
 		this.codigo = Incidencia.codSig;
 		Incidencia.codSig++;
