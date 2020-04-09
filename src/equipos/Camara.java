@@ -19,6 +19,13 @@ public class Camara extends Dispositivo {
 		this.angVertical = angVertical;
 		this.angHorizontal = angHorizontal;
 	}
+	public Camara(int codigo, double precio, String descripcion, String coordenadas, String fabricante,
+			String horaEnc, String horaApag, boolean operativo,	LinkedList<Averia> averias, boolean movil, int angVertical, int angHorizontal) {
+		super(codigo, precio, descripcion, coordenadas, fabricante, horaEnc, horaApag, operativo, averias);
+		this.movil = movil;
+		this.angVertical = angVertical;
+		this.angHorizontal = angHorizontal;
+	}
 	public Camara() {
 		super();
 		this.movil = false;

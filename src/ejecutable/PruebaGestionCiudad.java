@@ -5,7 +5,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import datos.GestionDatosAverias;
+import datos.GestionDatosDispositivos;
 import equipos.Averia;
+import equipos.Camara;
+import equipos.Dispositivo;
+import equipos.Semaforo;
 
 public class PruebaGestionCiudad implements Serializable {
 	
@@ -29,6 +33,15 @@ public class PruebaGestionCiudad implements Serializable {
 		for(Averia c:averias3) {
 			c.mostrarAveria();
 		}
+		
+		Semaforo s = new Semaforo(1,155.25, "semaforo 2 colores", "25.254,45.548", "jhonsons control",
+				"10:00", "22:00", true, averias, false, 50, 3, 30);
+		Camara c= new Camara(25, 69.95, "Camara ip", "24.545,54.254", "Samsung",
+			"19:00", "21:30", true,	averias, true, 25, 50);
+		Dispositivo[] dispos = new Dispositivo[2];
+		dispos[0]=s;
+		dispos[1]=c;
+		GestionDatosDispositivos.exportarDatosDispositivos(dispos, "c:/Users/Usuario/Desktop/pruebas");
 	}
 
 }

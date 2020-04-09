@@ -22,6 +22,14 @@ public class Semaforo extends Dispositivo {
 		this.segAmarillo = segAmarillo;
 		this.segRojo = segRojo;
 	}
+	public Semaforo(int codigo, double precio, String descripcion, String coordenadas, String fabricante,
+			String horaEnc, String horaApag, boolean operativo,	LinkedList<Averia> averias, boolean ambar, int segVerde, int segAmarillo, int segRojo) {
+		super(codigo, precio, descripcion, coordenadas, fabricante,horaEnc, horaApag, operativo, averias);
+		this.ambar = ambar;
+		this.segVerde = segVerde;
+		this.segAmarillo = segAmarillo;
+		this.segRojo = segRojo;
+	}
 	public Semaforo() {
 		super();
 		this.ambar = true;

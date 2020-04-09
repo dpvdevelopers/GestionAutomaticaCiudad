@@ -13,9 +13,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import equipos.Averia;
+import equipos.Camara;
 import equipos.Dispositivo;
+import equipos.Farola;
+import equipos.Semaforo;
 
 /**
  * Clase para gestionar los datos de dispositivos, guardandolos o recuperandolos desde archivo y para importar/exportar a csv
@@ -125,7 +129,7 @@ public class GestionDatosDispositivos implements Serializable{
 				guardado=true;
 			}else {
 				Dispositivo[] dispositivosAGuardar = new Dispositivo[1];
-				dispositivosAGuardar[1] = dispositivo;
+				dispositivosAGuardar[0] = dispositivo;
 				
 				ObjectOutputStream salida = new ObjectOutputStream(new FileOutputStream(rutaCompleta));
 				salida.writeObject(dispositivosAGuardar);
@@ -144,29 +148,73 @@ public class GestionDatosDispositivos implements Serializable{
 	 * creará en la ruta indicada en el parámetro.
 	 * (cada fila un registro con los campos separados por el carácter ";". Las averías del dispositivo se almacenan después
 	 * de los campos, solo se almacena el código de cada avería, por lo que al guardar los datos se llama al método "exportarAveria"
-	 * almacenando las averías de cada dispositivo en un archivo independiente. La ruta completa de ese archivo será el último
+	 * almacenando las averías de los dispositivos en un archivo independiente. La ruta completa de ese archivo será el último
 	 * campo almacenado en los registros.
+	 * @see GestionDatosAverias#exportarAverias(Averia[], String)
 	 * @param dispositivos Array de objetos Dispositivo a guardar.
 	 * @param ruta Ruta del directorio donde se creará el archivo, sin incluir el nombre del archivo ni el carácter separador
 	 * @return Devuelve un valor true si se lleva a cabo la operación sin errores, en caso contrario devuelve false.
 	 */
 	public static boolean exportarDatosDispositivos(Dispositivo[] dispositivos, String ruta) {
 		String rutaCompleta = ruta+File.separator+"datosDispositivos.csv";
+		ArrayList<Dispositivo> dispositivosAGuardar= new ArrayList<Dispositivo>();
+		if(new File(rutaCompleta).exists()) {
+			dispositivosAGuardar = importarDispositivos(ruta);
+		}
+		for(int i=2;new File(rutaCompleta).exists();i++) {
+			rutaCompleta=ruta+File.separator+"datosDispositivos"+i+".csv";
+		}
 		boolean exportado=false;
 		try {
+			if(dispositivos!=null) {
+				for(Dispositivo d:dispositivos) {
+					dispositivosAGuardar.add(d);
+				}
+			}
 			FileWriter archivo = new FileWriter(rutaCompleta);
 			BufferedWriter buffer = new BufferedWriter(archivo);
-		
+			//int totalAverias = 0;
 			if(dispositivos == null) {
 				System.out.println("Ha ocurrido un error al recibir los dispositivos");
 			}else {
-				for(Dispositivo d:dispositivos) {
-					String averiasDispositivo;
+				String datos="";
+				for(Dispositivo d:dispositivosAGuardar) {
+					switch (d.getClass().getName()) {
+						case "equipos.Semaforo":
+							Semaforo s = (Semaforo) d;
+							datos = Integer.toString(d.getCodigo())+";"+d.getCoordenadas()+";"+d.getDescripcion()+";"+d.isOperativo()+";"+
+									d.getFabricante()+";"+Double.toString(d.getPrecio())+";"+d.getHoraEnc()+";"+d.getHoraApag()+";"+s.isAmbar()+";"+
+									Integer.toString(s.getSegAmarillo())+";"+Integer.toString(s.getSegRojo())+";"+Integer.toString(s.getSegVerde());
+								for(Averia a:d.getAverias()) {
+									datos = datos +";"+ Integer.toString(a.getCodigo())+";"+a.getCoste()+";"+a.getDescripcion()+";"+a.getFechaAlta()+";"+
+											a.getFechaRep()+";"+Integer.toString(a.getGravedad())+";"+a.isResuelta();
+								}
+							break;
+						case "equipos.Farola":
+							Farola f = (Farola) d;
+							datos = Integer.toString(d.getCodigo())+";"+d.getCoordenadas()+";"+d.getDescripcion()+";"+d.isOperativo()+";"+
+									d.getFabricante()+";"+Double.toString(d.getPrecio())+";"+d.getHoraEnc()+";"+d.getHoraApag()+";"+
+									Integer.toString(f.getPotencia())+";"+f.getTipoLampara();
+							break;
+						case "equipos.Camara":
+							Camara c = (Camara) d;
+							datos = Integer.toString(d.getCodigo())+";"+d.getCoordenadas()+";"+d.getDescripcion()+";"+d.isOperativo()+";"+
+									d.getFabricante()+";"+Double.toString(d.getPrecio())+";"+d.getHoraEnc()+";"+d.getHoraApag()+";"+
+									Integer.toString(c.getAngHorizontal())+";"+c.getAngVertical()+";"+Boolean.toString(c.isMovil());
+							break;
+					}
+				
 					
-					String datos = Integer.toString(d.getCodigo())+";"+d.getCoordenadas()+";"+d.getDescripcion()+";"+d.isOperativo()+";"+
-						d.getFabricante()+";"+Double.toString(d.getPrecio())+";"+d.getHoraEnc()+";"+d.getHoraApag()+"\n";
+					for(Averia a:d.getAverias()) {
+						datos = datos +";"+ Integer.toString(a.getCodigo())+";"+a.getCoste()+";"+a.getDescripcion()+";"+a.getFechaAlta()+";"+
+								a.getFechaRep()+";"+Integer.toString(a.getGravedad())+";"+a.isResuelta();
+						//totalAverias++;
+					}
+					
+					datos = datos + ";"+d.getClass().getName()+"\n";
 					buffer.write(datos);
 				}
+				
 				buffer.flush();
 				buffer.close();
 				archivo.close();
@@ -184,19 +232,72 @@ public class GestionDatosDispositivos implements Serializable{
 	 * @param ruta ruta del directorio que contiene el archivo datosDispositivos.csv
 	 * @return ArrayList<Dispositivo> con los datos importados.
 	 */
-	public static ArrayList<Averia> importarAverias(String ruta) {
-		ArrayList<Averia> averiasImportadas = new ArrayList<Averia>();
-		String datosAveria;
+	public static ArrayList<Dispositivo> importarDispositivos(String ruta) {
+		ArrayList<Dispositivo> dispositivosImportados = new ArrayList<Dispositivo>();
+		String datosDispositivo;
 
 		try {
-			FileReader archivo = new FileReader(ruta+File.separator+"datosAverias.csv");
+			FileReader archivo = new FileReader(ruta+File.separator+"datosDispositivos.csv");
 			BufferedReader buffer = new BufferedReader(archivo);
-			while((datosAveria = buffer.readLine())!= null) {
-				String[] datosFormateados = datosAveria.split(";");
-				Averia a = new Averia(Integer.valueOf(datosFormateados[0]),Integer.valueOf(datosFormateados[5]), Double.valueOf(datosFormateados[1]), datosFormateados[3], datosFormateados[4],
-						datosFormateados[2],Boolean.valueOf(datosFormateados[6]));
-				averiasImportadas.add(a);
+			while((datosDispositivo = buffer.readLine())!= null) {
+				String[] datosFormateados = datosDispositivo.split(";");
+				int numeroAverias = 0;
+				
+				
+				switch (datosFormateados[datosFormateados.length-1]) {
+					case "equipos.Semaforo":
+						if((datosFormateados.length - 12)>0) {
+							numeroAverias = (datosFormateados.length - 12)/7;
+						}
+						LinkedList<Averia> averias = new LinkedList<Averia>();
+						for(int i=0;i<numeroAverias;i++) {
+							Averia a = new Averia(Integer.valueOf(datosFormateados[(i*7)+12]),Integer.valueOf(datosFormateados[12+5+(7*i)]), 
+									Double.valueOf(datosFormateados[12+1+(i*7)]), datosFormateados[12+3+(i*7)], datosFormateados[12+4+(i*7)],
+									datosFormateados[12+2+(i*7)],Boolean.valueOf(datosFormateados[12+6+(i*7)]));
+							averias.add(a);
+						}
+						Semaforo s = new Semaforo(Integer.valueOf(datosFormateados[0]),Double.valueOf(datosFormateados[5]),
+							datosFormateados[2], datosFormateados[1], datosFormateados[4], datosFormateados[6], datosFormateados[7],
+							Boolean.valueOf(datosFormateados[3]),averias, Boolean.valueOf(datosFormateados[8]), Integer.valueOf(datosFormateados[11]),
+							Integer.valueOf(datosFormateados[9]),Integer.valueOf(datosFormateados[10]));
+						dispositivosImportados.add(s);
+						break;
+					case "equipos.Farola":
+						if((datosFormateados.length - 10)>0) {
+							numeroAverias = (datosFormateados.length - 10)/7;
+						}
+						LinkedList<Averia> averias2 = new LinkedList<Averia>();
+						for(int i=0;i<numeroAverias;i++) {
+							Averia a = new Averia(Integer.valueOf(datosFormateados[(i*7)+10]),Integer.valueOf(datosFormateados[10+5+(7*i)]), 
+									Double.valueOf(datosFormateados[10+1+(i*7)]), datosFormateados[10+3+(i*7)], datosFormateados[10+4+(i*7)],
+									datosFormateados[10+2+(i*7)],Boolean.valueOf(datosFormateados[10+6+(i*7)]));
+							averias2.add(a);
+						}
+						Farola f = new Farola(Integer.valueOf(datosFormateados[0]),Double.valueOf(datosFormateados[5]),
+							datosFormateados[2], datosFormateados[1], datosFormateados[4], datosFormateados[6], datosFormateados[7],
+							Boolean.valueOf(datosFormateados[3]),averias2, Integer.valueOf(datosFormateados[8]), datosFormateados[9]);
+						dispositivosImportados.add(f);
+						break;
+					case "equipos.Camara":
+						if((datosFormateados.length - 11)>0) {
+							numeroAverias = (datosFormateados.length - 11)/7;
+						}
+						LinkedList<Averia> averias3 = new LinkedList<Averia>();
+						for(int i=0;i<numeroAverias;i++) {
+							Averia a = new Averia(Integer.valueOf(datosFormateados[(i*7)+11]),Integer.valueOf(datosFormateados[11+5+(7*i)]), 
+									Double.valueOf(datosFormateados[11+1+(i*7)]), datosFormateados[11+3+(i*7)], datosFormateados[11+4+(i*7)],
+									datosFormateados[11+2+(i*7)],Boolean.valueOf(datosFormateados[11+6+(i*7)]));
+							averias3.add(a);
+						}
+						Camara c = new Camara(Integer.valueOf(datosFormateados[0]),Double.valueOf(datosFormateados[5]),
+							datosFormateados[2], datosFormateados[1], datosFormateados[4], datosFormateados[6], datosFormateados[7],
+							Boolean.valueOf(datosFormateados[3]),averias3, Boolean.valueOf(datosFormateados[10]), Integer.valueOf(datosFormateados[8]), 
+							Integer.valueOf(datosFormateados[9]));
+						dispositivosImportados.add(c);
+						break;
+				}
 			}
+			
 			buffer.close();
 			archivo.close();
 		} catch (FileNotFoundException e) {
@@ -206,7 +307,7 @@ public class GestionDatosDispositivos implements Serializable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return averiasImportadas;
+		return dispositivosImportados;
 	}
 }
 

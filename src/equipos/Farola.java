@@ -18,6 +18,12 @@ public class Farola extends Dispositivo {
 		this.potencia = potencia;
 		this.tipoLampara = tipoLampara;
 	}
+	public Farola(int codigo, double precio, String descripcion, String coordenadas, String fabricante,
+			String horaEnc, String horaApag, boolean operativo, LinkedList<Averia> averias, int potencia, String tipoLampara) {
+		super(codigo, precio, descripcion, coordenadas, fabricante, horaEnc, horaApag, operativo, averias);
+		this.potencia = potencia;
+		this.tipoLampara = tipoLampara;
+	}
 	public Farola() {
 		super();
 		this.potencia = 220;
