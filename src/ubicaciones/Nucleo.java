@@ -29,6 +29,12 @@ public abstract class Nucleo implements Serializable{
 		this.horaEnc = horaEnc;
 		this.horaApag = horaApag;
 	}
+	public Nucleo(int codigo, String nombre, String horaEnc, String horaApag) {
+		this.codigo = codigo;
+		this.nombre = nombre;
+		this.horaEnc = horaEnc;
+		this.horaApag = horaApag;
+	}
 	public Nucleo() {
 		this.codigo = Nucleo.codSig;
 		Nucleo.codSig ++;

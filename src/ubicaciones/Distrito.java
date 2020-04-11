@@ -28,6 +28,14 @@ public class Distrito extends Nucleo {
 			this.barrios =  new LinkedList<Barrio>();
 		}
 	}
+	public Distrito(int codigo, String nombre, String horaEnc, String horaApag, LinkedList<Barrio> barrios) {
+		super(codigo, nombre, horaEnc, horaApag);
+		if(barrios!=null) {
+			this.barrios = barrios;
+		}else {
+			this.barrios =  new LinkedList<Barrio>();
+		}
+	}
 	public Distrito(Distrito d) {
 		super(d);
 		if(d.barrios!=null) {

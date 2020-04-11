@@ -24,10 +24,24 @@ public class Via extends Nucleo {
 			this.dispositivos = new LinkedList<Dispositivo>();
 		}
 	}
+	public Via(int codigo, String nombre, String horaEnc, String horaApag, TipoVia tipo, LinkedList<Dispositivo> dispositivos) {
+		super(codigo, nombre, horaEnc, horaApag);
+		if(dispositivos!= null) {
+			this.tipo = tipo;
+			this.dispositivos = dispositivos;
+		}else {
+			this.dispositivos = new LinkedList<Dispositivo>();
+		}
+	}
 	public Via() {
 		super();
 		this.tipo = TipoVia.CALLE;
 		this.dispositivos = new LinkedList<Dispositivo>(); 
+	}
+	public Via(Via v) {
+		super(v);
+		this.tipo = v.getTipo();
+		this.dispositivos = v.getDispositivos();
 	}
 	// ------------------------------------- getters and setters ------------------------------------
 	public final TipoVia getTipo() {

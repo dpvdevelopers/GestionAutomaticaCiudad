@@ -211,7 +211,7 @@ public class GestionDatosAverias implements Serializable{
 				guardado=true;
 			}else {
 				Averia[] averiasAGuardar = new Averia[1];
-				averiasAGuardar[1] = averia;
+				averiasAGuardar[0] = averia;
 				
 				ObjectOutputStream salida = new ObjectOutputStream(new FileOutputStream(rutaCompleta));
 				salida.writeObject(averiasAGuardar);

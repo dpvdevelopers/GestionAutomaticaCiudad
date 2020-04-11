@@ -155,8 +155,13 @@ public class GestionDatosDispositivos implements Serializable{
 	 * @param ruta Ruta del directorio donde se creará el archivo, sin incluir el nombre del archivo ni el carácter separador
 	 * @return Devuelve un valor true si se lleva a cabo la operación sin errores, en caso contrario devuelve false.
 	 */
-	public static boolean exportarDatosDispositivos(Dispositivo[] dispositivos, String ruta) {
-		String rutaCompleta = ruta+File.separator+"datosDispositivos.csv";
+	public static String exportarDatosDispositivos(Dispositivo[] dispositivos, String ruta) {
+		String rutaCompleta="";
+		if(new File(ruta).isDirectory()) {
+				rutaCompleta = ruta+File.separator+"datosDispositivos.csv";
+		}else {
+			rutaCompleta = ruta;
+		}
 		ArrayList<Dispositivo> dispositivosAGuardar= new ArrayList<Dispositivo>();
 		if(new File(rutaCompleta).exists()) {
 			dispositivosAGuardar = importarDispositivos(ruta);
@@ -224,7 +229,7 @@ public class GestionDatosDispositivos implements Serializable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return exportado;
+		return rutaCompleta;
 	}
 	/**
 	 * Importa los dispositivos contenidos en un fichero csv, cada objeto Dispositivo debe ser una fila, con los atributos separados por 
@@ -235,9 +240,15 @@ public class GestionDatosDispositivos implements Serializable{
 	public static ArrayList<Dispositivo> importarDispositivos(String ruta) {
 		ArrayList<Dispositivo> dispositivosImportados = new ArrayList<Dispositivo>();
 		String datosDispositivo;
+		String rutaCompleta="";
+		if(new File(ruta).isDirectory()) {
+				rutaCompleta = ruta+File.separator+"datosDispositivos.csv";
+		}else {
+			rutaCompleta = ruta;
+		}
 
 		try {
-			FileReader archivo = new FileReader(ruta+File.separator+"datosDispositivos.csv");
+			FileReader archivo = new FileReader(rutaCompleta);
 			BufferedReader buffer = new BufferedReader(archivo);
 			while((datosDispositivo = buffer.readLine())!= null) {
 				String[] datosFormateados = datosDispositivo.split(";");

@@ -30,6 +30,14 @@ public class Barrio extends Nucleo {
 			this.vias =  new LinkedList<Via>();
 		}
 	}
+	public Barrio(int codigo, String nombre, String horaEnc, String horaApag, LinkedList<Via> vias) {
+		super(codigo, nombre, horaEnc, horaApag);
+		if(vias!=null) {
+			this.vias = vias;
+		}else {
+			this.vias =  new LinkedList<Via>();
+		}
+	}
 	public Barrio(Barrio b) {
 		super(b);
 		if(b.vias!=null) {

@@ -28,6 +28,14 @@ public class Municipio extends Nucleo {
 			this.distritos =  new LinkedList<Distrito>();
 		}
 	}
+	public Municipio(int codigo, String nombre, String horaEnc, String horaApag, LinkedList<Distrito> distritos) {
+		super(codigo, nombre, horaEnc, horaApag);
+		if(distritos!=null) {
+			this.distritos = distritos;
+		}else {
+			this.distritos =  new LinkedList<Distrito>();
+		}
+	}
 	public Municipio(Municipio m) {
 		super(m);
 		if(m.distritos!=null) {
@@ -40,7 +48,7 @@ public class Municipio extends Nucleo {
 	}
 	// ----------------------------------------- getters and setters -------------------------------
 	
-	public final LinkedList<Distrito> getLocalidades() {
+	public final LinkedList<Distrito> getDistritos() {
 		return distritos;
 	}
 
