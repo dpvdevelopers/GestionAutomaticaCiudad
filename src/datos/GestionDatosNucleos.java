@@ -99,7 +99,7 @@ public class GestionDatosNucleos implements Serializable{
 				}
 				// guardamos en el array la averia pasadas en el parametro de entrada
 				
-				nucleosAGuardar[1+nucleosRecuperados.length] = nucleos;
+				nucleosAGuardar[nucleosRecuperados.length] = nucleos;
 				
 				ObjectOutputStream salida = new ObjectOutputStream(new FileOutputStream(rutaCompleta));
 				salida.writeObject(nucleosAGuardar);
@@ -233,6 +233,7 @@ public class GestionDatosNucleos implements Serializable{
 							
 							datos = datos +";"+n.getClass().getName()+"\n";
 							buffer.write(datos);
+							break;
 					}
 				}
 				buffer.flush();

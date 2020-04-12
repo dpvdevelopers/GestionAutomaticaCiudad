@@ -37,6 +37,24 @@ public class Tecnico extends Persona {
 		}
 			this.supervisor = supervisor;
 	}
+	public Tecnico(int codigo, String nombre, String apellido1, String apellido2, String dni, String direccion, String telefono,
+			String fechaNac, String fechaAlta, double sueldo, String categoria, boolean activo,
+			LinkedList<Averia> avPendientes, LinkedList<Averia> avTerminadas, int supervisor) {
+		super(codigo, nombre, apellido1, apellido2, dni, direccion, telefono, fechaNac, fechaAlta, sueldo);
+		this.categoria = categoria;
+		this.activo = activo;
+		if(avPendientes!=null) {
+			this.avPendientes = avPendientes;
+		}else {
+			this.avPendientes = new LinkedList<Averia>();
+		}
+		if(avTerminadas != null) {
+			this.avTerminadas = avTerminadas;
+		}else {
+			this.avTerminadas = new LinkedList<Averia>();
+		}
+			this.supervisor = supervisor;
+	}
 	public Tecnico(String nombre, String apellido1, String categoria, boolean activo,
 			LinkedList<Averia> avPendientes, LinkedList<Averia> avTerminadas, int supervisor) {
 		super(nombre, apellido1);
@@ -61,6 +79,22 @@ public class Tecnico extends Persona {
 		this.avPendientes = new LinkedList<Averia>();
 		this.avTerminadas =  new LinkedList<Averia>();
 		this.supervisor = 0;
+	}
+	public Tecnico(Tecnico t) {
+		super(t);
+		this.categoria = t.categoria;
+		this.activo = t.activo;
+		if(avPendientes!=null) {
+			this.avPendientes = t.avPendientes;
+		}else {
+			this.avPendientes = new LinkedList<Averia>();
+		}
+		if(avTerminadas != null) {
+			this.avTerminadas = t.avTerminadas;
+		}else {
+			this.avTerminadas = new LinkedList<Averia>();
+		}
+			this.supervisor = t.supervisor;
 	}
 
 	// ----------------------------------------- getters and setters -------------------------------------

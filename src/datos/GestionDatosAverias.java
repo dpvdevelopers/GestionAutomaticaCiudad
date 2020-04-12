@@ -203,7 +203,7 @@ public class GestionDatosAverias implements Serializable{
 				}
 				// guardamos en el array la averia pasadas en el parametro de entrada
 				
-				averiasAGuardar[1+averiasRecuperadas.length] = averia;
+				averiasAGuardar[averiasRecuperadas.length] = averia;
 				
 				ObjectOutputStream salida = new ObjectOutputStream(new FileOutputStream(rutaCompleta));
 				salida.writeObject(averiasAGuardar);

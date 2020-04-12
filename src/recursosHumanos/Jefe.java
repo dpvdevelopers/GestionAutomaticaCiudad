@@ -47,6 +47,35 @@ public class Jefe extends Persona {
 			}
 			this.objetivo = objetivo;
 		}
+		public Jefe(int codigo, String nombre, String apellido1, String apellido2, String dni, String direccion, String telefono,
+				String fechaNac, String fechaAlta, double sueldo, String departamento, boolean activo,
+				LinkedList<Supervisor> supervisores, LinkedList<Incidencia> pendientes, LinkedList<Incidencia> terminadas,
+				LinkedList<Distrito> distritos, int objetivo) {
+			super(codigo, nombre, apellido1, apellido2, dni, direccion, telefono, fechaNac, fechaAlta, sueldo);
+			this.departamento = departamento;
+			this.activo = activo;
+			if(supervisores !=null) {
+				this.supervisores = supervisores;
+			}else {
+				this.supervisores = new LinkedList<Supervisor>();
+			}
+			if(pendientes !=null) {
+				this.pendientes = pendientes;
+			}else {
+				this.pendientes = new LinkedList<Incidencia>();
+			}
+			if(terminadas !=null) {
+				this.terminadas = terminadas;
+			}else {
+				this.terminadas = new LinkedList<Incidencia>();
+			}
+			if(distritos !=null) {
+				this.distritos = distritos;
+			}else {
+				this.distritos = new LinkedList<Distrito>();
+			}
+			this.objetivo = objetivo;
+		}
 		public Jefe(String nombre, String apellido1,  String dni,  String telefono) {
 			super(nombre, apellido1);
 			this.departamento = "No asignado";

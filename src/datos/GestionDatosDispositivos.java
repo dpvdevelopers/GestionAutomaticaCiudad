@@ -121,7 +121,7 @@ public class GestionDatosDispositivos implements Serializable{
 				}
 				// guardamos en el array el dispositivo pasado en el parametro de entrada
 				
-				dispositivossAGuardar[1+dispositivosRecuperados.length] = dispositivo;
+				dispositivossAGuardar[dispositivosRecuperados.length] = dispositivo;
 				
 				ObjectOutputStream salida = new ObjectOutputStream(new FileOutputStream(rutaCompleta));
 				salida.writeObject(dispositivossAGuardar);
@@ -169,7 +169,6 @@ public class GestionDatosDispositivos implements Serializable{
 		for(int i=2;new File(rutaCompleta).exists();i++) {
 			rutaCompleta=ruta+File.separator+"datosDispositivos"+i+".csv";
 		}
-		boolean exportado=false;
 		try {
 			if(dispositivos!=null) {
 				for(Dispositivo d:dispositivos) {
@@ -223,7 +222,6 @@ public class GestionDatosDispositivos implements Serializable{
 				buffer.flush();
 				buffer.close();
 				archivo.close();
-				exportado = true;
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

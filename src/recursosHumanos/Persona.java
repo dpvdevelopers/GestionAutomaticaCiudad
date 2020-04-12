@@ -35,6 +35,19 @@ public abstract class Persona implements Informes, Serializable {
 		this.fechaAlta = fechaAlta;
 		this.sueldo = sueldo;
 	}
+	public Persona(int codigo, String nombre, String apellido1, String apellido2, String dni, String direccion,
+			String telefono, String fechaNac, String fechaAlta, double sueldo) {
+		this.codigo = codigo;
+		this.nombre = nombre;
+		this.apellido1 = apellido1;
+		this.apellido2 = apellido2;
+		this.dni = dni;
+		this.direccion = direccion;
+		this.telefono = telefono;
+		this.fechaNac = fechaNac;
+		this.fechaAlta = fechaAlta;
+		this.sueldo = sueldo;
+	}
 	public Persona(String nombre, String apellido1) {
 		this.codigo = Persona.codSig;
 		Persona.codSig++;
@@ -62,8 +75,7 @@ public abstract class Persona implements Informes, Serializable {
 		this.sueldo = 0.0;
 	}
 	public Persona(Persona p) {
-		this.codigo = Persona.codSig;
-		Persona.codSig++;
+		this.codigo = p.codigo;
 		this.nombre = p.nombre;
 		this.apellido1 = p.apellido1;
 		this.apellido2 = p.apellido2;

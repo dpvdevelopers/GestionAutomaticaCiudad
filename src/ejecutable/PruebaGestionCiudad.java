@@ -8,11 +8,14 @@ import datos.GestionDatosAverias;
 import datos.GestionDatosDispositivos;
 import datos.GestionDatosIncidencias;
 import datos.GestionDatosNucleos;
+import datos.GestionDatosPersonas;
 import equipos.Averia;
 import equipos.Camara;
 import equipos.Dispositivo;
 import equipos.Incidencia;
 import equipos.Semaforo;
+import recursosHumanos.Persona;
+import recursosHumanos.Tecnico;
 import ubicaciones.Barrio;
 import ubicaciones.Nucleo;
 import ubicaciones.TipoVia;
@@ -75,6 +78,20 @@ public class PruebaGestionCiudad implements Serializable {
 		for(Nucleo n: nucleosImportados) {
 			System.out.println(n.getClass());
 		}
+		nucleosImportados.get(1).mostrarDispositivos();
+		
+		LinkedList<Averia> averiasTer = new LinkedList<Averia>();
+		averiasTer.add(a);
+		Tecnico t = new Tecnico(54, "daniel","Pulido","del Valle", "54545454","alcazaba 41","659189945","12/07/1980",
+				"15/12/2003", 25000, "oficial", true, averias, averiasTer, 25 );
+		Persona[] personas = new Persona[1];
+		personas[0]= t;
+		GestionDatosPersonas.exportarPersonas(personas,  "c:/Users/Usuario/Desktop/pruebas");
+		LinkedList<Persona> personasImportadas = GestionDatosPersonas.importarPersonas("c:/Users/Usuario/Desktop/pruebas");
+		for(Persona p: personasImportadas) {
+			p.mostrarPersona();
+		}
+		
 	}
 
 }
