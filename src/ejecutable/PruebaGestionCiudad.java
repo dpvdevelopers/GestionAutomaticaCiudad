@@ -14,6 +14,7 @@ import equipos.Camara;
 import equipos.Dispositivo;
 import equipos.Incidencia;
 import equipos.Semaforo;
+import interfazGrafica.Principal;
 import recursosHumanos.Persona;
 import recursosHumanos.Tecnico;
 import ubicaciones.Barrio;
@@ -91,7 +92,7 @@ public class PruebaGestionCiudad implements Serializable {
 		for(Persona p: personasImportadas) {
 			p.mostrarPersona();
 		}
-		
+		Principal.main(args);
 	}
 
 }
