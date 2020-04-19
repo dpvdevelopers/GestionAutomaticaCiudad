@@ -28,6 +28,9 @@ import javax.swing.JList;
 import javax.swing.JSeparator;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
+
+import baseDatos.BaseDatos;
+
 import javax.swing.JScrollPane;
 
 public class Principal {
@@ -93,20 +96,28 @@ public class Principal {
 		panelSuperiorInicio.add(txtDispositivos);
 		txtDispositivos.setColumns(10);
 		
-		String[][] datosTablaDispositivos = {{ "semaforo 2 colores", "25.254,45.548", "jhonsons control","10:00", "22:00"},{ "semaforo 2 colores", "25.254,45.548", "jhonsons control",
-			"10:00", "22:00"}};
-		String[] camposTablaDispositivos = {"Codigo", "Nombre", "Tipo", "descripción", "Fabricante"};
+		String[][] datosTablaDispositivos = BaseDatos.recuperarDispositivos(BaseDatos.conexion(null, "root", "1234"));
+			//{{ "semaforo 2 colores", "25.254,45.548", "jhonsons control","10:00", "22:00"},{ "semaforo 2 colores", "25.254,45.548", "jhonsons control",
+			//"10:00", "22:00"}};
+		String[] camposTablaDispositivos = {"Codigo", "Tipo", "Descripción", "Fabricante", "Estado"};
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(2, 21, 613, 230);
 		panelSuperiorInicio.add(scrollPane);
-		tableDispositivos = new JTable(datosTablaDispositivos, camposTablaDispositivos);
-		scrollPane.setViewportView(tableDispositivos);
+		//creo el table model para que las celdas no sean editables, insertando los datos de la tabla 
+		DefaultTableModel tableModel = new DefaultTableModel(datosTablaDispositivos, camposTablaDispositivos) {
+			@Override 
+			public boolean isCellEditable(int row, int column) { 
+				//all cells false
+				return false;
+			}
+		};  			
 		
-		tableDispositivos.setEnabled(false);
+		tableDispositivos = new JTable(tableModel);
+		scrollPane.setViewportView(tableDispositivos);
 		tableDispositivos.setFillsViewportHeight(true);
 		tableDispositivos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableDispositivos.setCellSelectionEnabled(true);
+		
 		
 		JPanel panelSecundarioInicio = new JPanel();
 		panelSecundarioInicio.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
