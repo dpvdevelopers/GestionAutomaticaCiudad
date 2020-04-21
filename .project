@@ -14,4 +14,10 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<variableList>
+		<variable>
+			<name>Project_img</name>
+			<value>file:/E:/Clase/CFGS/Programacion/Workbench/GestionAutomaticaCiudad/img/logo_sencillo.png</value>
+		</variable>
+	</variableList>
 </projectDescription>

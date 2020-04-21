@@ -209,18 +209,74 @@ public class BaseDatos {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		/*
-		 * select d.codigo, 'Farola' as Tipo, d.descripcion, d.fabricante, d.encendido from dispositivos d,
-farolas f where d.codigo = f.codigo 
-union
-select d.codigo, 'Semáforo' as Tipo, d.descripcion, d.fabricante, d.encendido from dispositivos d,
-semaforos s where d.codigo = s.codigo
-union
-select d.codigo, 'Cámara' as Tipo, d.descripcion, d.fabricante, d.encendido from dispositivos d,
-camaras c where d.codigo = c.codigo ;
-
-		 */
+		
 		return datosDispositivos;
+	}
+	public static String[][] recuperarNucleos(Connection conexion) {
+		String[][] datosNucleos = null;
+		ResultSet resultado = consulta("select codigo, tipo, nombre, time_format(h_enc,\"%H:%m\") \"H. Encendido\", time_format(h_apag,\"%H:%m\") \"H. Apagado\" from gestionciudad.nucleos where \r\n" + 
+				"clase like \"via\"\r\n" + 
+				"union\r\n" + 
+				"select codigo, clase, nombre, time_format(h_enc,\"%H:%m\") \"H. Encendido\", time_format(h_apag,\"%H:%m\") \"H. Apagado\" from gestionciudad.nucleos where \r\n" + 
+				"clase not like \"via\";", conexion);
+		int i = 0;
+		ArrayList<ArrayList> arrayRegistros = new ArrayList<ArrayList>();
+		
+		try {
+			while(resultado.next()) {
+				ArrayList<String> arrayResultados = new ArrayList<String>();
+				for(int x=1;x<=5;x++) {
+					
+					arrayResultados.add(resultado.getString(x));
+				}
+				arrayRegistros.add(arrayResultados);
+				
+			}
+			datosNucleos = new String[arrayRegistros.size()][5];
+			for(int z =0;z<arrayRegistros.size();z++) {
+				
+				for(int a = 0;a<5;a++) {
+					datosNucleos[z][a]= (String) arrayRegistros.get(z).get(a);
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		/*
+		 * 
+		 */
+		return datosNucleos;
+	}
+	public static String[][] recuperarPersonas(Connection conexion) {
+		String[][] datosPersonas = null;
+		ResultSet resultado = consulta("select nombre, apellido1, apellido2, cod_sup, cod_jefe from gestionciudad.personas;", conexion);
+		int i = 0;
+		ArrayList<ArrayList> arrayRegistros = new ArrayList<ArrayList>();
+		
+		try {
+			while(resultado.next()) {
+				ArrayList<String> arrayResultados = new ArrayList<String>();
+				for(int x=1;x<=5;x++) {
+					
+					arrayResultados.add(resultado.getString(x));
+				}
+				arrayRegistros.add(arrayResultados);
+				
+			}
+			datosPersonas = new String[arrayRegistros.size()][5];
+			for(int z =0;z<arrayRegistros.size();z++) {
+				
+				for(int a = 0;a<5;a++) {
+					datosPersonas[z][a]= (String) arrayRegistros.get(z).get(a);
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return datosPersonas;
 	}
 	public static void main(String args[]) {
 		Connection conexion = conexion(null,"root", "1234");
