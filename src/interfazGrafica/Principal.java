@@ -2,6 +2,8 @@ package interfazGrafica;
 
 import java.awt.EventQueue;
 import java.awt.Frame;
+import java.awt.Image;
+import java.sql.Connection;
 
 import javax.swing.JFrame;
 import java.awt.Dimension;
@@ -18,6 +20,7 @@ import java.awt.Color;
 import javax.swing.JPanel;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.BevelBorder;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -28,13 +31,24 @@ import javax.swing.JList;
 import javax.swing.JSeparator;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
+
+
+
+import baseDatos.BaseDatos;
+
 import javax.swing.JScrollPane;
+import javax.swing.JScrollBar;
 
 public class Principal {
 
 	private JFrame frmGestionAutomaticaCiudad;
 	private JTextField txtDispositivos;
 	private JTable tableDispositivos;
+	private JTextField textNucleos;
+	private JTable tableNucleos;
 
 	/**
 	 * Launch the application.
@@ -58,24 +72,111 @@ public class Principal {
 	public Principal() {
 		initialize();
 	}
-
+/**
+ * Crea la estructura básica del JTree y lo rellena utilizando los datos de la BD
+ * @return Devuelve un DefaultTreeModel con la estructura y todos los datos cargados
+ */
+	private DefaultTreeModel cargarDatosArbol(Connection conexion) {
+		
+		DefaultMutableTreeNode raiz = new DefaultMutableTreeNode("Ciudad");
+		DefaultMutableTreeNode nucleos = new DefaultMutableTreeNode("Núcleos");
+		DefaultMutableTreeNode dispositivos = new DefaultMutableTreeNode("Dispositivos");
+		DefaultMutableTreeNode personal = new DefaultMutableTreeNode("Personal");
+		
+		DefaultMutableTreeNode camaras = new DefaultMutableTreeNode("Cámaras");
+		DefaultMutableTreeNode semaforos = new DefaultMutableTreeNode("Semáforos");
+		DefaultMutableTreeNode farolas = new DefaultMutableTreeNode("Farolas");
+		
+		dispositivos.add(camaras);
+		dispositivos.add(semaforos);
+		dispositivos.add(farolas);
+		
+		DefaultMutableTreeNode vias = new DefaultMutableTreeNode("Vías");
+		DefaultMutableTreeNode barrios = new DefaultMutableTreeNode("Barrios");
+		DefaultMutableTreeNode distritos = new DefaultMutableTreeNode("Distritos");
+		DefaultMutableTreeNode municipios = new DefaultMutableTreeNode("Municipios");
+		
+		nucleos.add(municipios);
+		nucleos.add(distritos);
+		nucleos.add(barrios);
+		nucleos.add(vias);
+		
+		DefaultMutableTreeNode jefes = new DefaultMutableTreeNode("Jefes");
+		DefaultMutableTreeNode supervisores = new DefaultMutableTreeNode("Supervisores");
+		DefaultMutableTreeNode tecnicos = new DefaultMutableTreeNode("Técnicos");
+		
+		personal.add(jefes);
+		personal.add(supervisores);
+		personal.add(tecnicos);
+		
+		String[][] nucleosRecuperados = BaseDatos.recuperarNucleos(conexion);
+		for(int i = 0;i<nucleosRecuperados.length;i++) {
+			DefaultMutableTreeNode nucleo = new DefaultMutableTreeNode(nucleosRecuperados[i][2]);
+			switch(nucleosRecuperados[i][1]) {
+			case "vía":
+				vias.add(nucleo);
+				break;
+			case "barrio":
+				barrios.add(nucleo);
+				break;
+			case "distrito":
+				distritos.add(nucleo);
+				break;
+			case "municipio":
+				municipios.add(nucleo);
+				break;
+			default:
+				vias.add(nucleo);
+			}
+		}
+		
+		String[][] dispositivosRecuperados = BaseDatos.recuperarDispositivos(conexion);
+		for(int i = 0;i<dispositivosRecuperados.length;i++) {
+			DefaultMutableTreeNode dispositivo = new DefaultMutableTreeNode(dispositivosRecuperados[i][1]+" "+dispositivosRecuperados[i][0]);
+			switch(dispositivosRecuperados[i][1]) {
+			case "Farola":
+				farolas.add(dispositivo);
+				break;
+			case "Semáforo":
+				semaforos.add(dispositivo);
+				break;
+			case "Cámara":
+				camaras.add(dispositivo);
+				break;
+			}
+		}
+		String[][] personasRecuperadas = BaseDatos.recuperarPersonas(conexion);
+		for(int i = 0;i<personasRecuperadas.length;i++) {
+			DefaultMutableTreeNode persona = new DefaultMutableTreeNode(personasRecuperadas[i][0]+" "+personasRecuperadas[i][1]+" "+ personasRecuperadas[i][2]);
+			if(personasRecuperadas[i][3]== null) {
+			
+				if(personasRecuperadas[i][4] == null) {
+					jefes.add(persona);
+				}else {
+					supervisores.add(persona);
+				}				
+			}else {
+				tecnicos.add(persona);
+			}
+		}
+		raiz.add(nucleos);
+		raiz.add(dispositivos);
+		raiz.add(personal);
+		DefaultTreeModel arbol = new DefaultTreeModel(raiz);
+		
+		return arbol;
+	}
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		
 		frmGestionAutomaticaCiudad = new JFrame();
 		frmGestionAutomaticaCiudad.setTitle("Gesti\u00F3n Autom\u00E1tica Ciudad");
 		frmGestionAutomaticaCiudad.setResizable(false);
-		//frmGestionAutomaticaCiudad.setExtendedState(Frame.MAXIMIZED_BOTH);
 		frmGestionAutomaticaCiudad.setBounds(100, 100, 800, 600);
 		frmGestionAutomaticaCiudad.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmGestionAutomaticaCiudad.getContentPane().setLayout(null);
-		
-		JTree tree = new JTree();
-		tree.setAutoscrolls(true);
-		tree.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		tree.setBounds(10, 11, 139, 515);
-		frmGestionAutomaticaCiudad.getContentPane().add(tree);
 		
 		JPanel panelSuperiorInicio = new JPanel();
 		panelSuperiorInicio.setAutoscrolls(true);
@@ -93,25 +194,60 @@ public class Principal {
 		panelSuperiorInicio.add(txtDispositivos);
 		txtDispositivos.setColumns(10);
 		
-		String[][] datosTablaDispositivos = {{ "semaforo 2 colores", "25.254,45.548", "jhonsons control","10:00", "22:00"},{ "semaforo 2 colores", "25.254,45.548", "jhonsons control",
-			"10:00", "22:00"}};
-		String[] camposTablaDispositivos = {"Codigo", "Nombre", "Tipo", "descripción", "Fabricante"};
+		String[][] datosTablaDispositivos = BaseDatos.recuperarDispositivos(BaseDatos.conexion(null, "root", "1234"));
+		String[] camposTablaDispositivos = {"Codigo", "Tipo", "Descripción", "Fabricante", "Estado"};
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(2, 21, 613, 230);
 		panelSuperiorInicio.add(scrollPane);
-		tableDispositivos = new JTable(datosTablaDispositivos, camposTablaDispositivos);
-		scrollPane.setViewportView(tableDispositivos);
+		//creo el table model para que las celdas no sean editables, insertando los datos de la tabla 
+		DefaultTableModel tableModel = new DefaultTableModel(datosTablaDispositivos, camposTablaDispositivos) {
+			@Override 
+			public boolean isCellEditable(int row, int column) { 
+				//all cells false
+				return false;
+			}
+		};  			
 		
-		tableDispositivos.setEnabled(false);
+		tableDispositivos = new JTable(tableModel);
+		scrollPane.setViewportView(tableDispositivos);
 		tableDispositivos.setFillsViewportHeight(true);
 		tableDispositivos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableDispositivos.setCellSelectionEnabled(true);
+		
 		
 		JPanel panelSecundarioInicio = new JPanel();
 		panelSecundarioInicio.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panelSecundarioInicio.setBounds(159, 273, 613, 219);
 		frmGestionAutomaticaCiudad.getContentPane().add(panelSecundarioInicio);
+		panelSecundarioInicio.setLayout(null);
+		
+		textNucleos = new JTextField();
+		textNucleos.setFont(new Font("Tahoma", Font.BOLD, 11));
+		textNucleos.setHorizontalAlignment(SwingConstants.CENTER);
+		textNucleos.setEditable(false);
+		textNucleos.setText("N\u00FAcleos");
+		textNucleos.setBounds(2, 2, 613, 20);
+		panelSecundarioInicio.add(textNucleos);
+		textNucleos.setColumns(10);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(2, 21, 613, 198);
+		panelSecundarioInicio.add(scrollPane_1);
+		
+		String[][] datosTablaNucleos = BaseDatos.recuperarNucleos(BaseDatos.conexion(null, "root", "1234"));
+		String[] camposTablaNucleos = {"Codigo", "Tipo", "Nombre", "H. Encendido", "H. Apagado"};
+		
+		DefaultTableModel tableModelNucleos = new DefaultTableModel(datosTablaNucleos, camposTablaNucleos) {
+			@Override 
+			public boolean isCellEditable(int row, int column) { 
+				//all cells false
+				return false;
+			}
+		};  
+		
+		tableNucleos = new JTable(tableModelNucleos);
+		tableNucleos.setFillsViewportHeight(true);
+		scrollPane_1.setViewportView(tableNucleos);
 		
 		JButton btnIncidencia = new JButton("Nueva Incidencia");
 		btnIncidencia.setBounds(159, 503, 139, 23);
@@ -132,6 +268,15 @@ public class Principal {
 		JButton btnEstado = new JButton("Comprobar Estado");
 		btnEstado.setBounds(623, 503, 149, 23);
 		frmGestionAutomaticaCiudad.getContentPane().add(btnEstado);
+		
+		JScrollPane scrollPaneArbol = new JScrollPane();
+		scrollPaneArbol.setBounds(10, 11, 139, 515);
+		frmGestionAutomaticaCiudad.getContentPane().add(scrollPaneArbol);
+		
+		JTree tree = new JTree(cargarDatosArbol(BaseDatos.conexion(null, "root", "1234")));
+		scrollPaneArbol.setViewportView(tree);
+		tree.setAutoscrolls(true);
+		tree.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		
 		JMenuBar menuBar = new JMenuBar();
 		frmGestionAutomaticaCiudad.setJMenuBar(menuBar);
