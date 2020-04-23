@@ -22,14 +22,22 @@ import ubicaciones.Municipio;
 import ubicaciones.Nucleo;
 import ubicaciones.TipoVia;
 import ubicaciones.Via;
-
+/**
+ * Clase para almacenar y recuperar objetos de tipo Nucleo de archivos serializados o "csv".
+ * @author Daniel Pulido
+ *
+ */
 public class GestionDatosNucleos implements Serializable{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2548389507846028757L;
-
+/**
+ * Recupera los objetos tipo Nucleo contenidos en el archivo serializado establecido en el parámetro rutaCompleta.
+ * @param rutaCompleta Ruta, incluyendo el nombre de archivo, del origen de datos.
+ * @return Devuelve un Array Nucleo[] que contiene todos los objetos recuperados.
+ */
 	public static Nucleo[] recuperarNucleos(String rutaCompleta){
 		Nucleo[] nucleosRecuperados= new Nucleo[0];
 		try {
@@ -48,6 +56,12 @@ public class GestionDatosNucleos implements Serializable{
 		
 		return nucleosRecuperados;
 	}
+	/**
+	 * Método para almacenar objetos de tipo Nucleo en el archivo serializado indicado en el parámetro rutaCompleta, si el archivo ya existe, los datos se añaden al final.
+	 * @param nucleos LinkedList<Nucleo> que contiene los objetos Nucleo a guardar
+	 * @param rutaCompleta Ruta, incluyendo el nombre de archivo, donde se guardarán los objetos
+	 * @return Devuelve true si la operación se ejecuta correctamente, false en caso contrario.
+	 */
 	public static boolean guardarNucleos(LinkedList<Nucleo> nucleos, String rutaCompleta) {
 		boolean guardado = false;
 		try {
@@ -85,6 +99,12 @@ public class GestionDatosNucleos implements Serializable{
 		
 		return guardado;
 	}
+	/**
+	 * Guarda un único objeto tipo Nucleo en el archivo indicado en rutaCompleta, si el archivo existe, el núcleo se añade al final.
+	 * @param nucleos Un único objeto de tipo Nucleo que se añadirá al archivo.
+	 * @param rutaCompleta Ruta completa, incluyendo el nombre de archivo, donde se guardará el objeto.
+	 * @return Devuelve true si la operación es correcta, false en caso contrario.
+	 */
 	public static boolean guardarNucleos(Nucleo nucleos, String rutaCompleta) {
 		boolean guardado = false;
 		try {
@@ -121,7 +141,17 @@ public class GestionDatosNucleos implements Serializable{
 		
 		return guardado;
 	}
+	/**
+	 * Exporta los objetos tipo Nucleo contenidos en el array a un archivo "nucleos.csv" en la ruta incluida en el parámetro ruta, si la ruta no existe, se crea.
+	 * @param nucleos Array que contiene los objetos Nucleo que se guardarán. 
+	 * @param ruta Ruta del directorio que contendrá el archivo nucleos.csv con los datos almacenados.
+	 * @return Devuelve la ruta completa (incluyendo el nombre de archivo) donde se han almacenado los datos.
+	 */
 	public static String exportarNucleos(Nucleo[] nucleos, String ruta) {
+		File directorio = new File(ruta);
+		if(!directorio.exists()) {
+			directorio.mkdir();
+		}
 		String rutaCompleta="";
 		if(new File(ruta).isDirectory()) {
 			rutaCompleta = ruta+File.separator+"nucleos.csv";
@@ -246,6 +276,11 @@ public class GestionDatosNucleos implements Serializable{
 		}		
 		return rutaCompleta;
 	}
+	/**
+	 * Importa objetos tipo Nucleo de un archivo nucleos.csv y lo devuelve dentro de un objeto LinkedList<Nucleo>
+	 * @param ruta Ruta que contiene el archivo nucleos.csv.
+	 * @return Devuelve los datos recuperados dentro de un objeto LinkedList<Nucleo>
+	 */
 	public static LinkedList<Nucleo> importarNucleos(String ruta){
 		LinkedList<Nucleo> nucleosImportados = new LinkedList<Nucleo>();
 		String rutaCompleta="";

@@ -17,14 +17,25 @@ import java.util.LinkedList;
 
 import equipos.Averia;
 import equipos.Incidencia;
-
+/**
+ * Clase para gestionar los datos de las incidencias, contiene métodos estáticos para guardar y recuperar de archivos serializados y para importar y exportar de archivos CSV
+ * @author Daniel Pulido
+ * @see equipos.Incidencia
+ *
+ */
 public class GestionDatosIncidencias implements Serializable{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 5705796219400783971L;
-
+/**
+ * Método estático, guarda un objeto de tipo Incidencia en el archivo serializado establecido en la ruta
+ * @param incidencia Objeto Incidencia que se va a guardar
+ * @param rutaCompleta Ruta, incluyendo el nombre del archivo, donde se va a guardar el objeto, si el archivo de destino ya existe, la nueva Incidencia se almacena al final.
+ * @see GestionDatosIncidencias#recuperarIncidencias()
+ * @return Devuelve true si se ha completado correctamente y false en caso contrario.
+ */
 	public static boolean guardarIncidencia(Incidencia incidencia, String rutaCompleta) {
 		boolean guardado = false;
 		
@@ -62,7 +73,11 @@ public class GestionDatosIncidencias implements Serializable{
 		
 		return guardado;
 	}
-	
+	/**
+	 * Recupera los objetos de tipo Incidencia de un archivo y los devuelve en un array Incidencia[]
+	 * @param rutaCompleta Ruta del archivo de origen de datos, incluyendo el nombre del propio archivo.
+	 * @return Devuelve un array de objetos de tipo Incidencia
+	 */
 	public static Incidencia[] recuperarIncidencias(String rutaCompleta) {
 		Incidencia[] incidenciasRecuperadas= new Incidencia[0];
 		try {
@@ -81,7 +96,12 @@ public class GestionDatosIncidencias implements Serializable{
 		
 		return incidenciasRecuperadas;
 	}
-	
+	/**
+	 * Método estático para guardar varios objetos de tipo Incidencia, recibe un LinkedList<Incidencia> y lo añade al contenido del archivo.
+	 * @param incidencias LinkedList<Incidencia> que contiene los objetos a guardar
+	 * @param rutaCompleta Ruta completa del archivo, si existe los objetos se añadirán, si no existe se creará uno nuevo
+	 * @return Devuelve true si la operación se realiza correctamente y false en caso contrario.
+	 */
 	public static boolean guardarIncidencias(LinkedList<Incidencia> incidencias, String rutaCompleta) {
 		boolean guardado = false;
 		try {
@@ -119,8 +139,17 @@ public class GestionDatosIncidencias implements Serializable{
 		
 		return guardado;
 	}
-	
+	/**
+	 * Método estático para exportar objetos de tipo Incidencia a un archivo "incidencias.csv", si el archivo ya existe en la ruta, los datos se añadirán al final.
+	 * @param incidencias Array de objetos Incidencia que contiene los datos que se almacenarán.
+	 * @param ruta Ruta del directorio que contiene o contendrá el archivo "incidencias.csv", si el directorio o el archivo no existen, se crearán.
+	 * @return Devuelve una cadena String con la ruta completa, incluyendo el nombre de archivo, donde se han guardado los datos.
+	 */
 	public static String exportarIncidencias(Incidencia[] incidencias, String ruta) {
+		File rutaDirectorio = new File(ruta);
+		if(!rutaDirectorio.exists()) {
+			rutaDirectorio.mkdir();
+		}
 		String rutaCompleta = ruta+File.separator+"incidencias.csv";
 		
 		if(incidencias == null) {
@@ -190,6 +219,12 @@ public class GestionDatosIncidencias implements Serializable{
 		}
 		return rutaCompleta;
 	}
+	/**
+	 * Método para recuperar objetos de tipo Incidencia de un archivo "incidencias.csv" del directorio establecido en la ruta, el archivo debe haber sido creado con el método exportarIncidencias, o seguir la misma estructura de datos.
+	 * @param ruta Ruta del directorio que contiene el archivo "incidencias.csv".
+	 * @see GestionDatosIncidencias#exportarIncidencias(Incidencia[], String)
+	 * @return Devuelve un ArrayList<Incidencia> que contiene los objetos recuperados.
+	 */
 	public static ArrayList<Incidencia> importarIncidencias(String ruta) {
 		ArrayList<Incidencia> incidenciasImportadas = new ArrayList<Incidencia>();
 		String rutaCompleta = ruta + File.separator+"incidencias.csv";

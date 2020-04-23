@@ -1,7 +1,11 @@
 package equipos;
 
 import java.util.LinkedList;
-
+/**
+ * Clase que hereda de Dispositivo, añade las funcionalidades para un dispositivo tipo Cámara, incluye el ángulo vertical, ángulo horizontal, y si es móvil.
+ * @author Daniel Pulido
+ * @see equipos.Dispositivo
+ */
 public class Camara extends Dispositivo {
 	/**
 	 * 
@@ -19,6 +23,21 @@ public class Camara extends Dispositivo {
 		this.angVertical = angVertical;
 		this.angHorizontal = angHorizontal;
 	}
+	/**
+	 * Constructor completo, establece todos los valores según los parámetros recibidos.
+	 * @param codigo
+	 * @param precio
+	 * @param descripcion
+	 * @param coordenadas
+	 * @param fabricante
+	 * @param horaEnc
+	 * @param horaApag
+	 * @param operativo
+	 * @param averias
+	 * @param movil
+	 * @param angVertical
+	 * @param angHorizontal
+	 */
 	public Camara(int codigo, double precio, String descripcion, String coordenadas, String fabricante,
 			String horaEnc, String horaApag, boolean operativo,	LinkedList<Averia> averias, boolean movil, int angVertical, int angHorizontal) {
 		super(codigo, precio, descripcion, coordenadas, fabricante, horaEnc, horaApag, operativo, averias);
@@ -58,6 +77,7 @@ public class Camara extends Dispositivo {
 		this.angHorizontal = angHorizontal;
 	}
 	// --------------------------------------------------- METODOS --------------------------------------------
+	
 	@Override
 	public void enviarReparacion() {
 		Averia a = new Averia();
@@ -70,6 +90,10 @@ public class Camara extends Dispositivo {
 	public void moverIzq(int mov) {
 		this.angHorizontal -= mov;
 	}
+	/**
+	 * Aumenta la inclinación vertical en los grados marcados en el parámetro mov, siendo el punto más alto el punto 0 y el más bajo el 180.
+	 * @param mov Desplazamiento vertical de la cámara en grados.
+	 */
 	public void subir(int mov) {
 		if(this.angVertical+mov <= 0) {
 			this.angVertical = 0;
@@ -78,6 +102,10 @@ public class Camara extends Dispositivo {
 			this.angVertical -= mov;
 		}
 	}
+	/**
+	 * Reduce la inclinación vertical en los grados marcados en el parámetro mov, siendo el punto mas bajo el 180 y el más alto el 0.
+	 * @param mov Grados de desplazamiento hacia abajo de la cámara.
+	 */
 	public void bajar(int mov) {
 		if(this.angVertical>=180) {
 			this.angVertical = 180;

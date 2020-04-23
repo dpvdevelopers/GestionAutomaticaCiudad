@@ -24,14 +24,22 @@ import recursosHumanos.Tecnico;
 import ubicaciones.Barrio;
 import ubicaciones.Distrito;
 import ubicaciones.Nucleo;
-
+/**
+ * Clase para gestionar la importación y exportación de objetos Persona a archivos csv y el guardado y la recuperación de archivos serializados.
+ * @author Daniel Pulido
+ *
+ */
 public class GestionDatosPersonas implements Serializable{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2235026101483221621L;
-
+/**
+ * Recupera las personas guardadas en el archivo serializado pasado en el parámetro rutaCompleta y las devuelve en un array Persona[].
+ * @param rutaCompleta Ruta completa, incluyendo el nombre de archivo, de donde se van a recuperar los datos
+ * @return Devuelve un array Persona[] con los datos recuperados, en caso de no recuperar datos, el array estará vacío.
+ */
 	public static Persona[] recuperarPersonas(String rutaCompleta){
 		Persona[] personasRecuperadas= new Persona[0];
 		try {
@@ -50,7 +58,12 @@ public class GestionDatosPersonas implements Serializable{
 		
 		return personasRecuperadas;
 	}
-	
+	/**
+	 * Guarda los objetos Persona contenidos en un ArrayList<Persona> en el archivo especificado en rutaCompleta, si el archivo existe añade los datos al final, en caso contrario lo crea.
+	 * @param personas ArrayList<Persona> que contiene los objetos a guardar.
+	 * @param rutaCompleta Ruta completa, incluyendo el nombre de archivo.
+	 * @return Devuelve true si la operación ha sido realizada correctamente, en caso contrario devuelve false
+	 */
 	public static boolean guardarPersonas(ArrayList<Persona> personas, String rutaCompleta) {
 		boolean guardado = false;
 		try {
@@ -88,7 +101,12 @@ public class GestionDatosPersonas implements Serializable{
 		
 		return guardado;
 	}
-	
+	/**
+	 * Guarda un objeto Persona contenidos en el archivo especificado en rutaCompleta, si el archivo existe añade los datos al final, en caso contrario lo crea.
+	 * @param persona objeto Persona que contiene los datos a guardar.
+	 * @param rutaCompleta Ruta completa, incluyendo el nombre de archivo.
+	 * @return Devuelve true si la operación ha sido realizada correctamente, en caso contrario devuelve false
+	 */
 	public static boolean guardarPersonas(Persona persona, String rutaCompleta) {
 		boolean guardado = false;
 		try {
@@ -125,8 +143,17 @@ public class GestionDatosPersonas implements Serializable{
 		
 		return guardado;
 	}
-	
+	/**
+	 *  Almacena los datos contenidos en un array Persona[] en el archivo "persona.csv" en la ruta especificada en el parámetro, si la ruta o el archivo no existen, los crea, si existen, añade los datos al final.
+	 * @param personas Array de objetos Persona que contiene los datos a exportar.
+	 * @param ruta ruta del directorio que contiene el archivo, si el directorio no existe, se intentará crearlo.
+	 * @return Devuelve la ruta completa, incluyendo el nombre de archivo, donde se han almacenado los datos.
+	 */
 	public static String exportarPersonas(Persona[] personas, String ruta) {
+		File directorio = new File(ruta);
+		if(!directorio.exists()) {
+			directorio.mkdir();
+		}
 		String rutaCompleta="";
 		if(new File(ruta).isDirectory()) {
 			rutaCompleta = ruta+File.separator+"personas.csv";
@@ -366,7 +393,11 @@ public class GestionDatosPersonas implements Serializable{
 		}		
 		return rutaCompleta;
 	}
-
+/**
+ * Recupera los objetos de tipo Persona contenidos en el archivo "personas.csv" ubicado en el directorio especificado en el parámetro ruta.
+ * @param ruta ruta del directorio que contiene el archivo "personas.csv".
+ * @return Devuelve un LinkedList<Persona> que contiene los objetos recuperados.
+ */
 	public static LinkedList<Persona> importarPersonas(String ruta) {
 		LinkedList<Persona> personasImportadas = new LinkedList<Persona>();
 		String rutaCompleta="";

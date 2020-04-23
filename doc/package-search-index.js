@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"baseDatos"},{"l":"datos"},{"l":"ejecutable"},{"l":"equipos"},{"l":"interfazGrafica"},{"l":"recursosHumanos"},{"l":"ubicaciones"}]

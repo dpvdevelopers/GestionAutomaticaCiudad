@@ -2,7 +2,12 @@ package equipos;
 
 import java.io.Serializable;
 import java.util.LinkedList;
-
+/**
+ * Clase abstracta, crea la base para almacenar los datos básicos de un dispositivo
+ * <ul>Clases que heredan<li><a href="camara.html"> equipos.Camara</a></li><li><a href="semaforo.html">equipos.Semaforo</a></li><li><a href="farola.html">equipos.Farola</a></li></ul>
+ * @author Daniel Pulido
+ *
+ */
 public abstract class Dispositivo implements Serializable{
 	/**
 	 * 
@@ -39,6 +44,18 @@ public abstract class Dispositivo implements Serializable{
 			this.averias = new LinkedList<Averia>(); 
 		}
 	}
+	/**
+	 * Constructor completo, recibe todos los datos de los parámetros introducidos
+	 * @param codigo
+	 * @param precio
+	 * @param descripcion
+	 * @param coordenadas
+	 * @param fabricante
+	 * @param horaEnc
+	 * @param horaApag
+	 * @param operativo
+	 * @param averias
+	 */
 	public Dispositivo(int codigo, double precio, String descripcion, String coordenadas, String fabricante,
 			String horaEnc, String horaApag, boolean operativo,	LinkedList<Averia> averias) {
 	this.codigo = codigo;
