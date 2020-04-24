@@ -92,6 +92,7 @@ public class PruebaGestionCiudad implements Serializable {
 		for(Persona p: personasImportadas) {
 			p.mostrarPersona();
 		}
+		
 		Principal.main(args);
 	}
 

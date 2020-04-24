@@ -181,7 +181,21 @@ public class BaseDatos {
 				"constraint FK_AVERIA_INCIDENCIAS foreign key (cod_incidencia) references incidencias(codigo)," + 
 				"constraint FK_AVERIA_PERSONAS foreign key (cod_tecnico) references personas (codigo)," + 
 				"constraint FK_AVERIA_DISPOSITIVOS foreign key (cod_dispositivo) references dispositivos (codigo)" + 
-				");"
+				");"+
+				"create table nucleos("+
+					"codigo int primary key not null,"+
+					"tipo varchar(40),"+
+					"nombre varchar(50),"+
+					"h_enc time,"+
+					"h_apag time,"+
+					"cod_bar int,"+
+					"cod_dis int,"+
+					"cod_mun int,"+
+					"clase varchar(10),"+
+					"constraint FK_COD_BAR_CODIGO foreign key (cod_bar) references nucleos (codigo),"+
+					"constraint FK_COD_DIS_CODIGO foreign key (cod_dis) references nucleos (codigo),"+
+					"constraint FK_COD_MUN_CODIGO foreign key (cod_mun) references nucleos (codigo)"+
+					");"
 				;
 		ejecuta(scriptCreacionBD, conexion);
 		return bdCreada;
