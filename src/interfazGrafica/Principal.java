@@ -41,6 +41,8 @@ import baseDatos.BaseDatos;
 
 import javax.swing.JScrollPane;
 import javax.swing.JScrollBar;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Principal {
 
@@ -215,6 +217,7 @@ public class Principal {
 		tableDispositivos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		
+		
 		JPanel panelSecundarioInicio = new JPanel();
 		panelSecundarioInicio.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panelSecundarioInicio.setBounds(159, 273, 613, 219);
@@ -250,6 +253,11 @@ public class Principal {
 		scrollPane_1.setViewportView(tableNucleos);
 		
 		JButton btnIncidencia = new JButton("Nueva Incidencia");
+		btnIncidencia.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CrearIncidencia();
+			}
+		});
 		btnIncidencia.setBounds(159, 503, 139, 23);
 		frmGestionAutomaticaCiudad.getContentPane().add(btnIncidencia);
 		
@@ -466,5 +474,11 @@ public class Principal {
 		
 		JMenuItem mntmAcercaDe = new JMenuItem("Acerca de");
 		mnAyuda.add(mntmAcercaDe);
+	}
+
+	protected void CrearIncidencia() {
+		CrearIncidencia incidencia = new CrearIncidencia();
+		incidencia.setVisible(true);
+		
 	}
 }
